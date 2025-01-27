@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,8 +31,10 @@ public class AppController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<GenericResponseDTO>
     handleLoginRequest(@Valid @RequestBody LoginRequestDTO requestDTO){
-        System.out.println(requestDTO.getUsername());
         GenericResponseDTO responseDTO = authenticationService.authenticateUser(requestDTO);
+
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+
         return new ResponseEntity<>(responseDTO, HttpStatusCode.valueOf(responseDTO.getStatus()));
     }
 }
